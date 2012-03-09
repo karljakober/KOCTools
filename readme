@@ -1,0 +1,37 @@
+KOCTools
+
+This source code will not work with 0 modification.
+Koctools.com was heavily built into the vBulletin system, therefore lots of functionality will not be present in these php files (style, forum, accounts, etc)
+
+How it was done
+
+
+File overview
+
+	DB Scraping
+
+		updatecron.php - We set a cron job in webmin to run this script every 5 minutes. The script would make sure there isnt a currently updating server. If there is none it will take the top server off the queue and pass it to updatecli.php through php exec(). it also calls the 'twittertest.php' file and passes a tweet to it (completely unsecure). There are built in full paths you will need to edit if you wish to use this. 
+
+		queuegm.php - The same thing as the updatecron.php, but instead of using a cron run every 5 mintues, users would add to the queue via a greasemonkey script.
+
+		updatecli.php - This is the beef of the KOCtools scraper. The main function "populateSlots" takes all passed data, alliance names, and user information and enters this information into the database. Additional $types have been added to kingdoms of camelot since koctools was active, and would need to be added to the array. After the function is declared, it updates time time of last update and make sure the tables for the updating server are created. the long string contained in $urlend is appended to a generated url that contains a users facebook session data, and we get raw json data in return from kabam servers. Each bl_0_bt_0 is an x y coordinate on the grid, and returns a 5x5 grid of json data about everything in that area. You can append more x y coordinates to the end. We decided to do a 750x5 strip for each request. These numbers are then incremented and all data is entered into the database. When the update is complete the next server in queue is ran.
+
+	Info presentation
+
+		mapimg.php - Servername passed to it via get. Takes all information from database and creates an image of the map using GD.
+
+		autocomplete.php - Autocomplete for alliance search form.
+
+		map.php - current version of the main map information page. Includes search for players and alliances. Pass a server to it via get
+
+		top.php - top players page, pass a server to it via get
+	
+		wilderness.php - Wilderness search page
+
+		barbarian.php - barbarian search page
+
+		queue.php - actual queue presented here
+
+	Additional
+	
+		db.sql - SQL Schema
